@@ -1,0 +1,117 @@
+
+entity Property {
+  name String required
+  area String
+  areaUnit String
+  city String
+  country String
+  coordinates String
+  completionDatetime Instant
+  coverImageUrl String maxlength(1000)
+  isPartnerProject Boolean
+  postHandover Boolean
+  saleStatus String
+  status String
+  hasEscrow Boolean
+  minPriceAED BigDecimal
+  minPrice BigDecimal
+  minPricePerAreaUnit BigDecimal
+  maxPrice BigDecimal
+  priceCurrency String
+  overview TextBlob
+  website String
+  depositDescription String
+  parking String
+  externalId Long unique
+  buildings TextBlob maxlength(2000)
+  architecture TextBlob
+  interior TextBlob
+  lobby TextBlob
+  masterPlan TextBlob
+  mapPoints TextBlob
+  brochureUrl String maxlength(1000)
+  layoutsPdf String maxlength(1000)
+  videoUrl String maxlength(1000)
+  furnishing String
+  serviceCharge String
+  readiness String
+  maxArea BigDecimal
+  minArea BigDecimal
+  developerWebsite String maxlength(1000)
+  parkings TextBlob
+  unitAvailability TextBlob
+}
+
+entity Developer {
+  name String required
+  website String
+  email String
+  logoImageUrl String maxlength(1000)
+  officeAddress String
+  description TextBlob maxlength(2000)
+  externalId Long
+  workingHours TextBlob maxlength(1000)
+}
+
+entity Facility {
+  name String
+  imageUrl String maxlength(1000)
+  imageSource String maxlength(1000)
+}
+
+entity UnitBlock {
+  name String required
+  unitType String
+  normalizedType String
+  unitBedrooms String
+  unitsAmount Integer
+  unitsAreaFrom BigDecimal
+  unitsAreaTo BigDecimal
+  unitsPriceFrom BigDecimal
+  unitsPriceTo BigDecimal
+  areaUnit String
+  priceCurrency String
+  typicalUnitImageUrl String maxlength(1000)
+  externalId Long unique
+}
+
+entity PaymentPlan {
+  planName String required
+  monthsAfterHandover Integer
+}
+
+entity Payment {
+  paymentTime String
+  percentOfPayment String
+  order Integer
+}
+
+entity Marker {
+  name String required
+  area String
+  coordinates String
+  status String
+  saleStatus String
+  isPartnerProject Boolean
+  coverImageUrl String maxlength(1000)
+  minPrice BigDecimal
+  completionDate LocalDate
+  externalId Long unique
+  developer String
+}
+
+relationship OneToMany {
+  Developer{properties} to Property{developer}
+  Property{unitBlocks} to UnitBlock{property}
+  Property{facilities} to Facility{property}
+  Property{paymentPlans} to PaymentPlan{property}
+  PaymentPlan{payments} to Payment{plan}
+}
+
+relationship OneToOne {
+  Marker{property} to Property
+}
+
+paginate Property, Developer, UnitBlock, Facility, PaymentPlan, Payment, Marker with pagination
+service all with serviceClass
+dto all with mapstruct
